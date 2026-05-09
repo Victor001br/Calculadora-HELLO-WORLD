@@ -148,13 +148,7 @@ function CalculatorApp() {
   }
 
   function deleteLastCharacter() {
-    setExpression((currentExpression) => {
-      if (currentExpression === 'Erro') {
-        return '';
-      }
-
-      return currentExpression.slice(0, -1);
-    });
+    setExpression((currentExpression) => currentExpression.slice(0, -1));
   }
 
   function calculateResult() {
@@ -165,7 +159,7 @@ function CalculatorApp() {
     try {
       const originalExpression = expression;
       let result = Function(`"use strict"; return (${prepareExpression(expression)})`)();
-      result++;
+      //result++;
       setExpression(String(result));
       setDisplayEffect(true);
       registerOperation(originalExpression, result);
