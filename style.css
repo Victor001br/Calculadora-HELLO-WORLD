@@ -11,12 +11,30 @@ body {
   background: #e7eef5;
   color: #1f2933;
   transition: background 0.2s ease, color 0.2s ease;
+  overflow-x: hidden;
+}
+
+#root {
+  width: 100%;
+  display: grid;
+  place-items: center;
 }
 
 .app {
   width: min(92vw, 360px);
   display: grid;
   gap: 16px;
+  animation: app-enter 0.45s ease both;
+  transition: width 0.24s ease, transform 0.2s ease, filter 0.2s ease;
+}
+
+.app.scientific-mode {
+  width: min(94vw, 520px);
+}
+
+.app.modal-is-open {
+  transform: scale(0.98);
+  filter: blur(1px);
 }
 
 .calculator {
@@ -25,13 +43,48 @@ body {
   border-radius: 25px;
   background: #ffffff;
   box-shadow: 0 18px 45px rgba(31, 41, 51, 0.18);
-  transition: background 0.2s ease, box-shadow 0.2s ease;
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.calculator:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 55px rgba(31, 41, 51, 0.2);
 }
 
 h1 {
   margin: 0 0 16px;
   font-size: 1.5rem;
   text-align: center;
+}
+
+.mode-switch {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  margin-bottom: 16px;
+  padding: 5px;
+  border-radius: 10px;
+  background: #e7eef5;
+}
+
+.mode-option {
+  min-height: 38px;
+  border-radius: 7px;
+  background: transparent;
+  color: #52616f;
+  font-size: 0.9rem;
+  box-shadow: none;
+}
+
+.mode-option:hover {
+  background: #d9e2ec;
+  box-shadow: none;
+}
+
+.mode-option.active {
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.22);
 }
 
 .display {
@@ -45,6 +98,11 @@ h1 {
   color: #111827;
   font-size: 2rem;
   text-align: right;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.display-pop {
+  animation: display-pop 0.36s ease both;
 }
 
 .buttons {
@@ -52,6 +110,12 @@ h1 {
   grid-template-columns: repeat(4, 1fr);
   grid-auto-rows: 58px;
   gap: 12px;
+}
+
+.scientific-buttons {
+  grid-template-columns: repeat(5, 1fr);
+  grid-auto-rows: 52px;
+  gap: 10px;
 }
 
 button {
@@ -63,15 +127,20 @@ button {
   font-size: 1.15rem;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 0.12s ease, background 0.12s ease;
+  transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
 }
 
 button:hover {
   background: #bcccdc;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.14);
 }
 
 button:active {
   transform: scale(0.96);
+}
+
+.button-pressed {
+  animation: button-pulse 0.18s ease both;
 }
 
 .clear {
@@ -92,6 +161,16 @@ button:active {
   background: #fdba74;
 }
 
+.function {
+  background: #c7d2fe;
+  color: #312e81;
+  font-size: 0.98rem;
+}
+
+.function:hover {
+  background: #a5b4fc;
+}
+
 .equals {
   grid-column: span 2;
   background: #2f855a;
@@ -104,6 +183,89 @@ button:active {
 
 .zero {
   grid-column: span 2;
+}
+
+.scientific-buttons .equals {
+  grid-column: auto;
+}
+
+.scientific-buttons button {
+  min-height: 52px;
+}
+
+.history-button {
+  width: 100%;
+  min-height: 48px;
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.history-button:hover {
+  background: #1d4ed8;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(15, 23, 42, 0.48);
+  animation: fade-in 0.18s ease both;
+}
+
+.history-modal {
+  width: min(92vw, 420px);
+  border: 0;
+  border-radius: 12px;
+  padding: 20px;
+  background: #ffffff;
+  color: #1f2933;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.32);
+  animation: modal-enter 0.22s ease both;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.close-modal {
+  width: 40px;
+  min-height: 40px;
+  border-radius: 50%;
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.history-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding-left: 22px;
+}
+
+.history-list li {
+  padding: 10px 0;
+  border-bottom: 1px solid #d9e2ec;
+  overflow-wrap: anywhere;
+}
+
+.history-list li:last-child {
+  border-bottom: 0;
+}
+
+.history-empty {
+  margin: 0;
+  color: #52616f;
 }
 
 .theme-switch {
@@ -173,6 +335,24 @@ body.dark-theme .display {
   color: #f9fafb;
 }
 
+body.dark-theme .mode-switch {
+  background: #111827;
+}
+
+body.dark-theme .mode-option {
+  background: transparent;
+  color: #d1d5db;
+}
+
+body.dark-theme .mode-option:hover {
+  background: #374151;
+}
+
+body.dark-theme .mode-option.active {
+  background: #2563eb;
+  color: #ffffff;
+}
+
 body.dark-theme button {
   background: #374151;
   color: #f9fafb;
@@ -198,6 +378,15 @@ body.dark-theme .operator:hover {
   background: #b45309;
 }
 
+body.dark-theme .function {
+  background: #3730a3;
+  color: #eef2ff;
+}
+
+body.dark-theme .function:hover {
+  background: #4338ca;
+}
+
 body.dark-theme .equals {
   background: #047857;
 }
@@ -206,6 +395,93 @@ body.dark-theme .equals:hover {
   background: #059669;
 }
 
+body.dark-theme .history-button {
+  background: #1d4ed8;
+}
+
+body.dark-theme .history-button:hover {
+  background: #2563eb;
+}
+
+body.dark-theme .history-modal {
+  background: #1f2937;
+  color: #f9fafb;
+}
+
+body.dark-theme .history-list li {
+  border-bottom-color: #4b5563;
+}
+
+body.dark-theme .history-empty {
+  color: #d1d5db;
+}
+
 body.dark-theme .theme-switch {
   color: #f9fafb;
+}
+
+@keyframes app-enter {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes display-pop {
+  0% {
+    transform: scale(1);
+    box-shadow: none;
+  }
+
+  45% {
+    transform: scale(1.03);
+    border-color: #2563eb;
+    box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.16);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: none;
+  }
+}
+
+@keyframes button-pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(0.94);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-enter {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
