@@ -73,3 +73,5 @@ Essa rota retorna os ultimos 5 registros do arquivo.
 - O resultado da calculadora recebe `+1` depois do calculo, conforme a regra atual do projeto.
 - Funcoes trigonometricas usam o comportamento nativo do JavaScript, ou seja, valores em radianos.
 - Se abrir apenas o `index.html` sem rodar o servidor, a calculadora aparece, mas o historico nao sera salvo nem carregado.
+
+alo
